@@ -1,0 +1,283 @@
+@font-face {
+  font-family: 'hurme_geometric_sans';
+  src: url('hurmegeometricsans2_bold-webfont.woff2') format('woff2'),
+       url('hurmegeometricsans2_bold-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: bold;
+}
+@font-face {
+  font-family: 'hurme_geometric_sans';
+  src: url('hurmegeometricsans2_regular-webfont.woff2') format('woff2'),
+       url('hurmegeometricsans2_regular-webfont.woff') format('woff');
+  font-weight:
+  font-style: normal;
+}
+body {
+  font-family: 'hurme_geometric_sans', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #1c1e29;
+  background-color: #fff;
+}
+.result-percent {
+  border-top: 3px solid !important;
+  padding-top: 0.5rem;
+  display: inline-block;
+}
+a, a:hover, a:focus, a:active {
+  color: #1c1e29 !important;
+  text-decoration: none;
+}
+.table td {
+  vertical-align: middle;
+}
+.inactive {
+  pointer-events: none;
+}
+.wrapper {
+  margin: 30px auto 100px;
+}
+.wrapper, .bootstrap-nav {
+  width: 70%;
+  max-width: 900px;
+  margin: 0 auto;;
+}
+.side-nav {
+  position: fixed;
+  top: 0;
+  height: 100%;
+}
+.btn, a.btn {
+  border-radius: 4px;
+  color: #fff !important;
+  padding: 0.5rem 1.4rem;
+  font-weight: 600;
+  font-size: 14px;
+  transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+.btn[disabled]{
+  color: #fff !important;
+  opacity: 0.3;
+}
+.no-border-top {
+  border-top: 0 !important;
+}
+.no-border-bottom {
+  border-bottom: 0 !important;
+}
+.btn, .btn:focus, .form-control, .form-control:focus, .in-invalid:focus, .custom-control-input:focus~.custom-control-label::before {
+  box-shadow: none !important;
+}
+.form-control {
+  border: 0 !important;
+  border-bottom: 1px solid #e8ebed !important;
+  border-radius: 0;
+  /* background-color: #e8ebed; */
+  -webkit-appearance: none;
+  font-weight: 500;
+  font-size: 1.1rem !important;
+  padding-left: 0;
+  transition: all 120ms cubic-bezier(0.47,0,0.745,0.715);
+}
+.form-control:focus {
+  border-color: rgb(255, 90, 95) !important;
+}
+.form-control:disabled, .form-control[readonly] {
+  background-color: #E1E4E6;
+  border-color: #E1E4E6;
+}
+select.form-control {
+  height: auto !important;
+}
+label {
+  margin-bottom: 0;
+}
+label, .small-text {
+  text-align: inherit;
+  font-weight: 600;
+  line-height: 1.333333333333333;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+::placeholder, label, .text-muted {
+  color: #97a0bf !important;
+  /* color: #97a5aa !important; */
+}
+label, .small-text, .tag-style {
+  text-transform: uppercase;
+  letter-spacing: 0.0625rem;
+  font-size: 0.70rem;
+}
+.tag-style {
+  display: inline-block;
+  white-space: nowrap;
+  font-weight: bold;
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+  margin: .25em 0.5em .25em 0;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+.accent-bar-style {
+  font-size: 1.3rem !important;
+  padding: 15px;
+  display: inline-block;
+}
+a.tag-style:hover, .btn:hover, .close-icon:hover {
+  opacity: 0.7;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: block;
+}
+.hrline {
+  background: #f1f2fa;
+  min-height: 1px;
+}
+.circle {
+  background-color: #f7f8ff;
+  color: #97a0bf;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 120ms cubic-bezier(0.47,0,0.745,0.715);
+}
+.questionsProgress {
+  padding: 2px 0;
+  background-color: #f1f2fa;
+  position: relative;
+  border-radius: 5px;
+}
+.questionsProgressChild {
+  position: absolute;
+  background-color: #4a6ee0;
+  left: 0;
+  top: 0;
+  padding: 2px 0;
+  border-radius: 5px;
+}
+.list {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #f1f2fa;
+}
+.list:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.blue-green-bg {
+  padding: 25px;
+  background: linear-gradient(-71deg,#15c39a,#19bea0 6%,#19bea0 7%,#4c7af1 95%);
+  color: #fff;
+  margin: 25px 0;
+  border-radius: 10px;
+}
+.default-card {
+  background-color: #fff;
+  margin: 25px 0;
+  border-radius: 10px;
+}
+.secondary-card {
+  /* box-shadow: 0 1px 7px 0 rgba(129,137,169,.2); */
+  padding: 25px;
+  background-color: #fff;
+  margin: 25px 0;
+  border-radius: 10px;
+  border: 1px solid #f1f2fa;
+}
+.card-header {
+  background-color: #fff;
+  padding: 25px 25px;
+  border: 0;
+  border-radius: 10px 10px 0 0 !important;
+}
+.card-body {
+  background-color: #fff;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 0 0 10px 10px !important;
+}
+.card-reset {
+  margin: 0;
+  border-radius: 0 !important;
+  box-shadow: none;
+}
+.blank {
+  border-bottom: 2px dotted #ddd;
+  color: #ddd;
+  padding: 0 10px;
+}
+.light {
+  background-color: #f1f2fa;
+}
+.green {
+  background-color: #15c39a !important;
+  color: #fff !important;
+}
+.red {
+  background-color: #ea1537;
+  color: #fff;
+}
+.blue {
+  background-color: #4a6ee0;
+  color: #fff;
+}
+.orange {
+  background-color: #fab712;
+  color: #fff;
+}
+label, .clickable, .input-file {
+  cursor: pointer;
+}
+.dropdown-menu {
+  border: 0;
+  box-shadow: 0 1px 0 0 rgba(0,0,0,0.1), 0 0 1px 1px rgba(0,0,0,0.08);
+}
+.dropdown-item:active {
+  background-color: #edeff0;
+}
+.dropbox {
+  border: 5px dashed #E1E4E6;
+  max-height: 40px;
+  border-radius: 4px;
+}
+.dropbox:hover {
+  border-color: #CAD2D6;
+}
+.input-file {
+  opacity: 0;
+  width: 100%;
+  height: 30px;
+}
+.close-icon {
+  background-color: rgba(0,0,0,0.2);
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: opacity 0.2s ease;
+}
+/********** animation **********/
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(0, 5px);
+    -ms-transform: translate(0, 5px);
+    transform: translate(0, 5px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+}
+.animateThis {
+  -webkit-animation: fadeInUp 0.3s ease;
+  animation: fadeInUp 0.3s ease;
+}
