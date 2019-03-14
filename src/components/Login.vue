@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper animateThis">
     <form v-on:submit.prevent="login()">
-      <div class="row justify-content-md-center">
+      <div class="row justify-content-center">
         <div class="col-sm-6">
           <div class="default-card">
-            <h6 class="font-weight-bold mb-4">Have an account? login</h6>
-            <div class="tag-style mb-4 danger-highlight" v-if="failedLogin">
+            <h4 class="mb-4 font-weight-bold">Have an account? login</h4>
+            <div class="secondary-card red" v-if="failedLogin">
               Your credintials are incorrect
             </div>
             <div class="form-group">
@@ -14,6 +14,7 @@
                 v-model="email"
                 class="form-control"
                 id="email"
+                placeholder="email"
                 autocomplete="off">
             </div>
             <div class="form-group">
@@ -21,16 +22,17 @@
               <input type="password"
                 class="form-control"
                 v-model="password"
+                placeholder="password"
                 id="password">
             </div>
-            <div>
-              <button type="submit" class="btn primary-color" :disabled="loginValidator">Login</button>
+            <div class="form-group">
+              <button type="submit" class="btn black" :disabled="loginValidator">Login</button>
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
           <div class="default-card">
-            <h6 class="font-weight-bold mb-4">Don't have an account? Create One</h6>
+            <h4 class="mb-4 font-weight-bold">New user? Sign Up</h4>
             <div class="form-row">
               <div class="form-group col-sm-6">
                 <label for="firstName">First Name</label>
@@ -38,6 +40,7 @@
                   v-model="firstName"
                   class="form-control"
                   id="firstName"
+                  placeholder="first name"
                   autocomplete="off">
               </div>
               <div class="form-group col-sm-6">
@@ -46,6 +49,7 @@
                   v-model="lastName"
                   class="form-control"
                   id="lastName"
+                  placeholder="last name"
                   autocomplete="off">
               </div>
               <div class="form-group col-12">
@@ -54,6 +58,7 @@
                   v-model="newEmail"
                   class="form-control"
                   id="newEmail"
+                  placeholder="email"
                   autocomplete="off">
               </div>
               <div class="form-group col-12">
@@ -61,6 +66,7 @@
                 <input type="password"
                   class="form-control"
                   v-model="newPassword"
+                  placeholder="password"
                   id="newPassword">
               </div>
               <div class="form-group col-12">
@@ -68,14 +74,15 @@
                 <input type="password"
                   class="form-control"
                   v-model="passwordConfirm"
+                  placeholder="password again"
                   id="passwordConfirm">
               </div>
-              <div class="col-12">
-                <button type="submit" class="btn primary-color" :disabled="signupValidator">Create</button>
+              <div class="form-group col-12">
+                <button type="submit" class="btn black" :disabled="signupValidator">Create</button>
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </form>
   </div>
@@ -83,6 +90,7 @@
 
 <script>
 import appService from '../app.service.js'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -98,6 +106,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['userId']),
     loginValidator () {
       return (this.email && this.password) ? false : true
     },
@@ -107,16 +116,13 @@ export default {
   },
   methods: {
     login () {
-      // this.$store.dispatch('login', {
-      //   username: this.email,
-      //   password: this.password
-      // })
-      appService.login({
+      this.$store.dispatch('login', {
         username: this.email,
         password: this.password
       })
       .then(() => {
-        this.$router.push('/')
+        const redirect = `user/${this.userId}`
+        this.$router.push(redirect)
       })
       .catch((error) => {
         this.failedLogin = true

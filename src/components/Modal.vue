@@ -55,7 +55,7 @@ export default {
   width: 100%;
   pointer-events: auto;
   transition: all .3s ease;
-  box-shadow: 0 12px 48px 0 rgba(96,101,123,.24);
+  /* box-shadow: 0 12px 48px 0 rgba(96,101,123,.24); */
 }
 .dialog-enter {
   opacity: 0;

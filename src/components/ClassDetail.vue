@@ -1,129 +1,70 @@
 <template>
-  <div class="wrapper">
-    <Loader v-if="getClassLoader" />
-    <div class="default-card animateThis" v-if="!getClassLoader">
-      <h4 class="mb-0 font-weight-bold">{{ classTitle }}</h4>
-      <p class="mt-3 text-muted">{{ classDescription ? classDescription : 'No description' }}</p>
-      <div class="mt-4" v-if="userId != id">
-        <a href="javascript:void(0)" class="btn primary-color">Join</a>
-      </div>
-    </div>
-    <Modal width="600px" v-if="createQuizModal">
-      <div slot="header">
-        <div class="card-header primary-color">
-          <div class="row justify-content-between">
-            <div class="col-auto align-self-center">
-              <h5 class="mb-0 font-weight-bold">Create a new quiz</h5>
-            </div>
-            <div class="col-auto align-self-center">
-              <a href="javascript:void(0)"
-                class="tag-style default-highlight-light"
-                @click="createQuizModal = false">Dismiss</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div slot="body">
-        <div class="card-body">
-          <form v-on:submit.prevent="postQuiz()">
-            <div class="form-row align-items-center">
-              <div class="form-group col-sm-6">
-                <label for="quizName">Quiz Name</label>
-                <input type="text"
-                  v-model="quizName"
-                  class="form-control" id="quizName"
-                  autocomplete="off">
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="dueDate">Due Date</label>
-                <input type="date" class="form-control" v-model="dueDate" id="dueDate">
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="questionOrder">Questions Order</label>
-                <select class="form-control" v-model="questionOrder" id="questionOrder">
-                  <option value=""></option>
-                  <option value="order">Question Order</option>
-                  <option value="type">Question Type</option>
-                  <option value="?">Random</option>
-                </select>
-              </div>
-              <div class="form-group col-sm-6">
-                <label for="defaultMark">Default Mark</label>
-                <input type="number" class="form-control" v-model="defaultMark" id="defaultMark">
-              </div>
-              <div class="form-group col-12">
-                <button class="btn primary-color" :disabled="newQuizValidator">Save</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </Modal>
-    <Modal width="600px" v-if="editClassModal">
-      <div slot="header">
-        <div class="card-header primary-color">
-          <div class="row justify-content-between">
-            <div class="col-auto align-self-center">
-              <h5 class="mb-0 font-weight-bold">Edit Class</h5>
-            </div>
-            <div class="col-auto align-self-center">
-              <a href="javascript:void(0)"
-                class="tag-style default-highlight-light"
-                @click="editClassModal = false">Dismiss</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div slot="body">
-        <div class="card-body">
-          <form v-on:submit.prevent="updateClass()">
-            <div class="form-group">
-              <label for="classTitleUpdate">Class Title</label>
-              <input type="text"
-                v-model="classTitle"
-                class="form-control"
-                id="classTitleUpdate"
-                autocomplete="off" placeholder="Class Title">
-            </div>
-            <div class="form-group">
-              <label for="classTitle">Description</label>
-              <textarea rows="2" class="form-control"
-              v-model="classDescription" placeholder="Type class description here"></textarea>
-            </div>
-            <div class="form-group">
-              <button class="btn primary-color" :disabled="editClassValidator">Save</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </Modal>
+  <div>
     <Loader v-if="getQuizzesLoader" />
-    <div v-if="!getQuizzesLoader" class="animateThis">
-      <div class="card-header primary-color">
-        <div class="row justify-content-between">
-          <div class="col-auto align-self-center">
-            <h5 class="mb-0 font-weight-bold">{{ classTitle }} Quizzes</h5>
-          </div>
-          <div class="col-auto align-self-center">
-            <a href="javascript:void(0)" @click="createQuizModal = true" class="tag-style default-highlight-light">New</a>
+    <div v-if="!getQuizzesLoader" class="wrapper animateThis">
+      <div class="secondary-card">
+        <div class="row justify-content-between" v-if="!getClassLoader">
+          <div class="col align-self-center">
+            <h2 class="mb-2 font-weight-bold">{{ classTitle }}</h2>
+            <p class="mb-4 text-muted">{{ classDescription ? classDescription : 'No description' }}</p>
+            <button type="button"
+              class="btn black" v-bind:class="classColor">Join</button>
+              <button type="button" class="btn transparent ml-1" @click="createQuizModal = true">
+                Add Quiz</button>
           </div>
         </div>
       </div>
-      <div class="card-body">
-        <div v-if="!quizzes.length">
-          <p class="small-text text-center">No quizzes have been added yet</p>
-        </div>
-        <div class="list" v-for="(quiz, index) in quizzes" v-bind:key="index">
-          <Modal width="600px" v-if="selectedQuiz == quiz.id && editQuizModal">
+      <div class="row">
+        <p v-if="!quizzes.length" class="text-muted mb-0 text-center">No Quizzes have been added yet</p>
+        <div class="col-md-4" v-for="(quiz, index) in quizzes" v-bind:key="index">
+          <router-link :to="{name: 'QuizDetail', params: { id: quiz.id }}">
+            <div class="card-header text-center" v-bind:class="quiz.color">
+              <h5 class="mt-2 mb-1 font-weight-bold">{{ quiz.title }}</h5>
+              <p class="mb-2 text-muted-light">{{ quiz.total_questions }} questions</p>
+            </div>
+          </router-link>
+          <div class="card-body">
+            <div class="row justify-content-between">
+              <div class="col">
+                <p class="text-muted mb-0">Due Date {{ quiz.due_date }}</p>
+              </div>
+              <div class="col-auto align-self-center">
+                <div class="btn-group dropleft"
+                  v-bind:class="{show: quizDropDownId == quiz.id}">
+                  <a href="javascript:void(0)"
+                  @click="showQuizDropDown(quiz.id)">
+                    <svg viewBox="0 0 512 512" style="fill:#ccc;width:15px" xml:space="preserve">
+                      <g>
+                        <circle cx="256" cy="256" r="64"/>
+                        <circle cx="256" cy="448" r="64"/>
+                        <circle cx="256" cy="64" r="64"/>
+                      </g>
+                    </svg>
+                  </a>
+                  <div class="dropdown-menu"
+                    v-bind:class="{show: quizDropDownId == quiz.id}"
+                    style="left:auto;right:0;">
+                    <router-link :to="{ name: 'result', params: { quiz: quiz.id } }" class="dropdown-item small-text">Result</router-link>
+                    <a href="javascript:void(0)" class="dropdown-item small-text" @click="editQuiz(quiz.id)">Edit</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="javascript:void(0)" class="dropdown-item small-text danger-highlight"
+                      v-on:click="quizDeleteConfirm(quiz.id)">Remove
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Modal v-if="selectedQuiz == quiz.id && editQuizModal">
             <div slot="header">
-              <div class="card-header primary-color">
+              <div class="card-header" v-bind:class="quiz.color">
                 <div class="row justify-content-between">
                   <div class="col-auto align-self-center">
                     <h5 class="mb-0 font-weight-bold">Edit Quiz</h5>
                   </div>
                   <div class="col-auto align-self-center">
                     <a href="javascript:void(0)"
-                      class="tag-style default-highlight-light"
+                      class="light-highlight"
                       @click="editQuizModal = false">Dismiss</a>
                   </div>
                 </div>
@@ -136,109 +77,140 @@
                     <div class="form-group col-sm-6">
                       <label for="selectedQuizName">Quiz Name</label>
                       <input type="text"
-                        v-model="selectedQuizName"
+                        v-model="quiz.title"
                         class="form-control" id="selectedQuizName"
                         autocomplete="off" placeholder="Quiz Name">
                     </div>
                     <div class="form-group col-sm-6">
                       <label for="selectedQuizDueDate">Due Date</label>
-                      <input type="date" class="form-control" v-model="selectedQuizDueDate" id="selectedQuizDueDate">
+                      <input type="date" class="form-control" v-model="quiz.due_date" id="selectedQuizDueDate">
                     </div>
                     <div class="form-group col-sm-6">
                       <label for="selectedQuizQuestionOrder">Questions Order</label>
                       <select class="form-control"
                         id="selectedQuizQuestionOrder">
-                        <option :value="selectedQuizQuestionOrder">{{ getQuestionOrder(selectedQuizQuestionOrder) }}</option>
-                        <option value="order" v-if="selectedQuizQuestionOrder != 'order'">Question Order</option>
-                        <option value="type" v-if="selectedQuizQuestionOrder != 'type'">Question Type</option>
-                        <option value="?" v-if="selectedQuizQuestionOrder != 'rand'">Random</option>
+                        <option :value="quiz.question_order">{{ getQuestionOrder(quiz.question_order) }}</option>
+                        <option value="order" v-if="quiz.question_order != 'order'">Question Order</option>
+                        <option value="type" v-if="quiz.question_order != 'type'">Question Type</option>
+                        <option value="?" v-if="quiz.question_order != 'rand'">Random</option>
                       </select>
                     </div>
                     <div class="form-group col-sm-6">
                       <label for="selectedQuizDefaultMark">Default Mark</label>
-                      <input type="number" class="form-control" v-model="selectedQuizDefaultMark" id="selectedQuizDefaultMark" placeholder="Default Mark">
+                      <input type="number" class="form-control" v-model="quiz.default_mark" id="selectedQuizDefaultMark" placeholder="Default Mark">
+                    </div>
+                    <div class="form-group">
+                      <input type="hidden" v-model="quiz.color">
+                      <a href="javascript:void(0)" class="circle blue colorPanelBorder"
+                        v-bind:class="{'selectedColor': quiz.color == 'blue'}"
+                        @click="updateColor('blue', index)"></a>
+                      <a href="javascript:void(0)" class="circle green colorPanelBorder"
+                        v-bind:class="{'selectedColor': quiz.color == 'green'}"
+                        @click="updateColor('green', index)"></a>
+                      <a href="javascript:void(0)" class="circle orange colorPanelBorder"
+                        v-bind:class="{'selectedColor': quiz.color == 'orange'}"
+                        @click="updateColor('orange', index)"></a>
+                      <a href="javascript:void(0)" class="circle purple colorPanelBorder"
+                        v-bind:class="{'selectedColor': quiz.color == 'purple'}"
+                        @click="updateColor('purple', index)"></a>
+                      <a href="javascript:void(0)" class="circle red colorPanelBorder"
+                        v-bind:class="{'selectedColor': quiz.color == 'red'}"
+                        @click="updateColor('red', index)"></a>
                     </div>
                     <div class="form-group col-12">
-                      <button class="btn primary-color" :disabled="editQuizValidator">Save</button>
+                      <button class="btn" v-bind:class="quiz.color"   :disabled="editQuizValidator(index)">Save</button>
                     </div>
                   </div>
                 </form>
               </div>
             </div>
           </Modal>
-          <div class="row justify-content-between">
-            <div class="col-auto align-self-center">
-              <h6 class="mb-2 font-weight-bold">
-                <router-link :to="{name: 'QuizDetail', params: { id: quiz.id }}">{{ quiz.title }}</router-link>
-              </h6>
-              <span class="small-text">{{ quiz.total_questions }} questions</span>
-              <span class="small-text ml-3">Due Date {{ quiz.due_date }}</span>
-            </div>
-            <div class="col-auto align-self-center">
-              <div class="btn-group dropleft"
-                v-bind:class="{show: quizDropDownId == quiz.id}">
-                <a href="javascript:void(0)"
-                class="circle"
-                @click="showQuizDropDown(quiz.id)">
-                  <svg viewBox="0 0 512 512" style="fill:#fff;width:15px" xml:space="preserve">
-                    <g>
-                      <circle cx="256" cy="256" r="64"/>
-                      <circle cx="256" cy="448" r="64"/>
-                      <circle cx="256" cy="64" r="64"/>
-                    </g>
-                  </svg>
-                </a>
-                <div class="dropdown-menu"
-                  v-bind:class="{show: quizDropDownId == quiz.id}"
-                  style="left:auto;right:0;">
-                  <router-link :to="{ name: 'result', params: { quiz: quiz.id } }" class="dropdown-item small-text">Result</router-link>
-                  <a href="javascript:void(0)" class="dropdown-item small-text" @click="editQuiz(quiz.id, quiz.title, quiz.question_order, quiz.due_date, quiz.default_mark)">Edit</a>
-                  <div class="dropdown-divider"></div>
-                  <a href="javascript:void(0)" class="dropdown-item small-text danger-highlight"
-                    v-on:click="quizDeleteConfirm(quiz.id, quiz.title)">Remove
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
           <Modal width="500px" v-if="selectedQuiz == quiz.id && deleteQuizModal">
-            <div slot="header">
-              <div class="card-header orange">
-                <div class="row justify-content-between">
-                  <div class="col-auto align-self-center">
-                    <h5 class="mb-0 font-weight-bold">Delete this quiz?</h5>
-                  </div>
-                  <div class="col-auto align-self-center">
-                    <a href="javascript:void(0)"
-                      class="default-highlight-light"
-                      @click="deleteQuizModal = false">
-                      <svg style="width:12px;fill:#fff;" viewBox="0 0 12 12">
-                        <g>
-                          <path d="M8.2,6l3.3-3.3c0.6-0.6,0.6-1.6,0-2.2s-1.6-0.6-2.2,0L6,3.8L2.7,0.5c-0.6-0.6-1.6-0.6-2.2,0s-0.6,1.6,0,2.2L3.8,6L0.5,9.3   c-0.6,0.6-0.6,1.6,0,2.2c0.6,0.6,1.6,0.6,2.2,0L6,8.2l3.3,3.3c0.6,0.6,1.6,0.6,2.2,0c0.6-0.6,0.6-1.6,0-2.2L8.2,6z"></path>
-                        </g>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div slot="body">
-              <div class="card-body">
-                <h4 class="font-weight-bold">{{ selectedQuizName }}</h4>
+              <div class="secondary-card">
+                <h4 class="font-weight-bold mb-3">{{ quiz.title }}</h4>
                 <p class="text-muted">
                   You are about to delete this quiz. No one will be able to access this quiz ever again.
                 </p>
                 <p class="font-weight-bold">Are you absolutely positive? There's no undo.</p>
-                <button @click="deleteQuiz(quiz.id, index)"
-                  class="btn red mr-1">Yes, delete</button>
-                <button @click="deleteQuizModal = false"
-                  class="btn secondary-color">Cancel</button>
+                <div class="mt-3">
+                  <button @click="deleteQuiz(quiz.id, index)"
+                    class="btn red mr-1">Yes, delete</button>
+                  <button @click="deleteQuizModal = false"
+                    class="btn transparent">Cancel</button>
+                </div>
               </div>
             </div>
           </Modal>
         </div>
       </div>
     </div>
+    <Modal v-if="createQuizModal">
+      <!-- <div slot="header">
+        <div class="card-header black">
+          <div class="row justify-content-between">
+            <div class="col-auto align-self-center">
+              <h4 class="mb-0 font-weight-bold">Create a new quiz</h4>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div slot="body">
+        <div class="secondary-card">
+          <form v-on:submit.prevent="postQuiz()">
+            <div class="form-row">
+              <div class="form-group col-sm-6">
+                <label for="quizName">Quiz Name</label>
+                <input type="text"
+                  v-model="quizName" class="form-control" id="quizName"
+                  placeholder="Quiz Title" autocomplete="off">
+              </div>
+              <div class="form-group col-sm-6">
+                <label for="dueDate">Due Date</label>
+                <input type="date" class="form-control" v-model="dueDate" id="dueDate">
+              </div>
+              <div class="form-group col-sm-6">
+                <label for="questionOrder">Questions Order</label>
+                <select class="form-control" v-model="questionOrder" id="questionOrder">
+                  <option value="">Select One</option>
+                  <option value="order">Question Order</option>
+                  <option value="type">Question Type</option>
+                  <option value="?">Random</option>
+                </select>
+              </div>
+              <div class="form-group col-sm-6">
+                <label for="defaultMark">Default Mark</label>
+                <input type="number" class="form-control" v-model="defaultMark"
+                  placeholder="Default Mark" id="defaultMark">
+              </div>
+              <div class="form-group col-12">
+                <input type="hidden" v-model="quizColor">
+                <a href="javascript:void(0)" class="circle blue colorPanelBorder"
+                  v-bind:class="{'selectedColor': quizColor == 'blue'}"
+                  @click="chooseColor('blue')"></a>
+                <a href="javascript:void(0)" class="circle green colorPanelBorder"
+                  v-bind:class="{'selectedColor': quizColor == 'green'}"
+                  @click="chooseColor('green')"></a>
+                <a href="javascript:void(0)" class="circle orange colorPanelBorder"
+                  v-bind:class="{'selectedColor': quizColor == 'orange'}"
+                  @click="chooseColor('orange')"></a>
+                <a href="javascript:void(0)" class="circle purple colorPanelBorder"
+                  v-bind:class="{'selectedColor': quizColor == 'purple'}"
+                  @click="chooseColor('purple')"></a>
+                <a href="javascript:void(0)" class="circle red colorPanelBorder"
+                  v-bind:class="{'selectedColor': quizColor == 'red'}"
+                  @click="chooseColor('red')"></a>
+              </div>
+              <div class="mt-4 text-right">
+                <button type="button" class="btn black mr-1" :disabled="newQuizValidator">Save</button>
+                <button type="button" class="btn transparent"
+                  @click="createQuizModal = false">Close</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -262,16 +234,13 @@ export default {
       questionOrder: '',
       defaultMark: null,
       quizName: null,
+      quizColor: null,
       classTitle: null,
+      classColor: null,
       classDescription: null,
       quizzes: [],
       selectedQuiz: null,
-      selectedQuizName: null,
-      selectedQuizDueDate: null,
-      selectedQuizQuestionOrder: null,
-      selectedQuizDefaultMark: null,
       createQuizModal: false,
-      editClassModal: false,
       editQuizModal: false,
       deleteQuizModal: false,
       quizDropDownId: null
@@ -280,13 +249,19 @@ export default {
   computed: {
     ...mapGetters(['isAuthenticated']),
     newQuizValidator () {
-      return (this.quizName && this.dueDate && this.questionOrder && this.defaultMark) ? false : true
+      return (this.quizName && this.dueDate && this.questionOrder && this.defaultMark && this.quizColor) ? false : true
     },
     editQuizValidator () {
-      return (this.selectedQuizName && this.selectedQuizDueDate && this.selectedQuizQuestionOrder && this.selectedQuizDefaultMark) ? false : true
+      return index => (this.quizzes[index].title && this.quizzes[index].due_date && this.quizzes[index].question_order && this.quizzes[index].default_mark) ? false : true
     }
   },
   methods: {
+    chooseColor(color) {
+      this.quizColor = color
+    },
+    updateColor(color, quizIndex) {
+      this.quizzes[quizIndex].color = color
+    },
     showQuizDropDown(quizId) {
       if (this.quizDropDownId == quizId) {
         this.quizDropDownId = null
@@ -299,33 +274,25 @@ export default {
       if (order == 'type') return 'Question Type'
       if (order == 'rand') return 'Random'
     },
-    editQuiz(quizId, quizName, quizQuestionOrder, quizDueDate, quizDefaultMark) {
+    editQuiz(quizId) {
       this.selectedQuiz = quizId
-      this.selectedQuizName = quizName
-      this.selectedQuizQuestionOrder = quizQuestionOrder
-      this.selectedQuizDueDate = quizDueDate
-      this.selectedQuizDefaultMark = quizDefaultMark
       this.editQuizModal = true
     },
-    updateQuiz(quizIndex) {
+    updateQuiz(index) {
       appService.updateQuiz({
         id: this.selectedQuiz,
-        title: this.selectedQuizName,
-        question_order: this.selectedQuizQuestionOrder,
-        default_mark: this.selectedQuizDefaultMark,
-        due_date: this.selectedQuizDueDate
+        title: this.quizzes[index].title,
+        question_order: this.quizzes[index].question_order,
+        default_mark: this.quizzes[index].default_mark,
+        due_date: this.quizzes[index].due_date,
+        color: this.quizzes[index].color
       })
         .then(() => {
-          this.quizzes[quizIndex].title = this.selectedQuizName,
-          this.quizzes[quizIndex].question_order = this.selectedQuizQuestionOrder,
-          this.quizzes[quizIndex].default_mark = this.selectedQuizDefaultMark,
-          this.quizzes[quizIndex].due_date = this.selectedQuizDueDate
           this.editQuizModal = false
         })
     },
-    quizDeleteConfirm(quizId, quizName) {
+    quizDeleteConfirm(quizId) {
       this.selectedQuiz = quizId
-      this.selectedQuizName = quizName
       this.deleteQuizModal = true
     },
     getClassQuizzes () {
@@ -340,7 +307,8 @@ export default {
         class_group: this.id,
         due_date: this.dueDate,
         default_mark: this.defaultMark,
-        question_order: this.questionOrder
+        question_order: this.questionOrder,
+        color: this.quizColor,
       })
         .then((data) => {
           this.quizName = null
@@ -358,6 +326,7 @@ export default {
     getClass () {
       appService.getClass(this.id).then(data => {
         this.classTitle = data.title
+        this.classColor = data.color
         this.classDescription = data.description
         this.getClassLoader = false
       })

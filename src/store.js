@@ -8,7 +8,7 @@ const store =  new Vuex.Store({
   state: {
     isAuthenticated: false,
     isStaff: false,
-    userId: '',
+    userId: null,
   },
   getters: {
     isAuthenticated: (state) => {
